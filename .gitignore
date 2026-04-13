@@ -1,0 +1,5 @@
+.env
+node_modules/
+.DS_Store
+deskrpg/.env
+postgres_data/

@@ -1,0 +1,32 @@
+{
+  "mcpServers": {
+    "figma": {
+      "description": "Figma 디자인 파일 접근 및 관리",
+      "command": "npx",
+      "args": ["-y", "@anthropic/figma-mcp-server"],
+      "env": {
+        "FIGMA_ACCESS_TOKEN": "${FIGMA_ACCESS_TOKEN}"
+      },
+      "teams": ["planning", "design"]
+    },
+    "google-sheets": {
+      "description": "Google Sheets 데이터 읽기/쓰기",
+      "command": "npx",
+      "args": ["-y", "@anthropic/google-sheets-mcp-server"],
+      "env": {
+        "GOOGLE_SERVICE_ACCOUNT_KEY": "${GOOGLE_SERVICE_ACCOUNT_KEY}"
+      },
+      "teams": ["planning"]
+    },
+    "web-search": {
+      "description": "웹 검색 (내장 WebSearch 도구 활용)",
+      "type": "builtin",
+      "teams": ["planning"]
+    }
+  },
+  "notes": {
+    "setup": "각 MCP 서버의 환경 변수는 .env 파일에 설정하세요",
+    "figma": "Figma Personal Access Token 필요: https://www.figma.com/developers/api",
+    "google-sheets": "Google Cloud Service Account JSON 키 필요"
+  }
+}

@@ -1,0 +1,26 @@
+# 팀장 합동 회의 워크플로우
+# 기획팀 산출물을 전 팀장이 검토하고 프로젝트 방향을 확정
+
+name: "팀장 합동 회의"
+trigger: "기획팀 기획서 완성 후"
+
+flow:
+  round1_briefing:
+    agent: "기획팀장"
+    action: "기획서 브리핑 — 핵심 내용 요약 + 각 팀에 필요한 사항 전달"
+
+  round2_review:
+    parallel: true
+    agents:
+      - agent: "디자인팀장"
+        action: "UX/UI 관점 검토 — 화면 구조 제안, 디자인 일정 산정, 기술적 제약"
+      - agent: "프론트팀장"
+        action: "프론트 관점 검토 — 기술 스택 제안, 구현 난이도, 일정 산정"
+      - agent: "백엔드팀장"
+        action: "백엔드 관점 검토 — 시스템 아키텍처, API 구조, DB 설계 방향, 인프라"
+
+  round3_decision:
+    agent: "기획팀장"
+    action: "전 팀장 의견 종합 → 프로젝트 방향서 확정"
+
+output: "docs/planning/project-direction.md"

@@ -1,0 +1,236 @@
+# Team Makes - 팀 구조 정의
+# 각 팀의 구성원, 역할, 도구, 워크플로우를 정의
+
+company:
+  name: "Team Makes"
+  description: "AI 에이전트로 구성된 가상 소프트웨어 회사"
+
+teams:
+  planning:
+    name: "기획팀"
+    description: "5인 회의 시스템 — Haiku(발산) → Sonnet(종합) → Opus(결정)"
+    color: "#4A90D9"
+    structure: "hierarchical_meeting"
+    members:
+      - agent: "기획팀장"
+        file: ".claude/agents/planning/team-lead.md"
+        model: opus
+        role: "최종 결정권자"
+        skills: [의사결정, 종합분석, 산출물작성]
+
+      - agent: "창의기획자"
+        file: ".claude/agents/planning/creative-lead.md"
+        model: sonnet
+        role: "창의 파트 리더"
+        reports_to: "기획팀장"
+        skills: [아이디어종합, 제안서작성, 트렌드분석]
+
+      - agent: "창의팀원"
+        file: ".claude/agents/planning/creative-member.md"
+        model: haiku
+        role: "창의 파트 팀원"
+        reports_to: "창의기획자"
+        skills: [아이디어발산, 자료수집, 브레인스토밍]
+
+      - agent: "비평기획자"
+        file: ".claude/agents/planning/critic-lead.md"
+        model: sonnet
+        role: "비평 파트 리더"
+        reports_to: "기획팀장"
+        skills: [리스크분석, 대안제시, 실패사례조사]
+
+      - agent: "비평팀원"
+        file: ".claude/agents/planning/critic-member.md"
+        model: haiku
+        role: "비평 파트 팀원"
+        reports_to: "비평기획자"
+        skills: [문제점지적, 반례수집, 현실체크]
+
+    meeting_flow:
+      round1_brainstorm:
+        parallel: true
+        agents: ["창의팀원", "비평팀원"]
+        description: "아이디어 발산 + 문제점 빠른 체크"
+      round2_synthesis:
+        parallel: true
+        agents: ["창의기획자", "비평기획자"]
+        description: "각 파트 의견 종합 및 보강"
+      round3_decision:
+        agents: ["기획팀장"]
+        description: "양측 의견 종합하여 최종 결론 도출"
+
+    mcps:
+      - web-search
+      - google-sheets
+      - figma
+    outputs:
+      - 기획서
+      - 경쟁사분석
+      - 요구사항문서
+      - 프로젝트일정
+
+  design:
+    name: "디자인팀"
+    description: "3인 구성 — UX설계 + UI디자인 → 팀장 종합"
+    color: "#E84393"
+    structure: "lead_review"
+    members:
+      - agent: "디자인팀장"
+        file: ".claude/agents/design/design-lead.md"
+        model: opus
+        role: "최종 결정권자"
+        skills: [UX아키텍처, 비주얼방향, 디자인스펙확정]
+
+      - agent: "UX디자이너"
+        file: ".claude/agents/design/ux-designer.md"
+        model: sonnet
+        role: "UX 전문가"
+        reports_to: "디자인팀장"
+        skills: [사용자플로우, 와이어프레임, 정보구조, 인터랙션]
+
+      - agent: "UI디자이너"
+        file: ".claude/agents/design/ui-designer.md"
+        model: sonnet
+        role: "UI 전문가"
+        reports_to: "디자인팀장"
+        skills: [비주얼디자인, 디자인시스템, 컴포넌트설계, 디자인토큰]
+
+    meeting_flow:
+      round1_design:
+        parallel: true
+        agents: ["UX디자이너", "UI디자이너"]
+        description: "UX 플로우 설계 + UI 비주얼 스타일 제안"
+      round2_decision:
+        agents: ["디자인팀장"]
+        description: "양측 산출물 종합하여 최종 디자인 확정"
+
+    mcps:
+      - figma
+    outputs:
+      - 와이어프레임
+      - UI목업
+      - 디자인토큰
+      - 컴포넌트스펙
+
+  frontend:
+    name: "프론트엔드팀"
+    description: "3인 구성 — 컴포넌트 + 페이지 → 팀장 종합"
+    color: "#00B894"
+    structure: "lead_review"
+    members:
+      - agent: "프론트팀장"
+        file: ".claude/agents/frontend/frontend-lead.md"
+        model: opus
+        role: "최종 결정권자"
+        skills: [프론트아키텍처, 성능최적화, 코드리뷰]
+
+      - agent: "컴포넌트개발자"
+        file: ".claude/agents/frontend/component-dev.md"
+        model: sonnet
+        role: "컴포넌트 전문가"
+        reports_to: "프론트팀장"
+        skills: [UI컴포넌트, 디자인시스템구현, Tailwind, 접근성]
+
+      - agent: "페이지개발자"
+        file: ".claude/agents/frontend/page-dev.md"
+        model: sonnet
+        role: "페이지 구현 전문가"
+        reports_to: "프론트팀장"
+        skills: [페이지조립, API연동, 상태관리, E2E테스트]
+
+    meeting_flow:
+      round1_implement:
+        parallel: true
+        agents: ["컴포넌트개발자", "페이지개발자"]
+        description: "컴포넌트 구현 + 페이지 조립"
+      round2_review:
+        agents: ["프론트팀장"]
+        description: "코드 리뷰 + 아키텍처 확인 + 성능 체크"
+
+    mcps:
+      - figma
+    outputs:
+      - UI컴포넌트
+      - 페이지구현
+      - E2E테스트
+
+  backend:
+    name: "백엔드팀"
+    description: "3인 구성 — API설계 + DB설계 → 팀장 종합"
+    color: "#6C5CE7"
+    structure: "lead_review"
+    members:
+      - agent: "백엔드팀장"
+        file: ".claude/agents/backend/backend-lead.md"
+        model: opus
+        role: "최종 결정권자"
+        skills: [시스템아키텍처, 기술스택결정, 보안, 배포]
+
+      - agent: "API설계자"
+        file: ".claude/agents/backend/api-engineer.md"
+        model: sonnet
+        role: "API 전문가"
+        reports_to: "백엔드팀장"
+        skills: [RESTful설계, 인증인가, 에러처리, API문서]
+
+      - agent: "DB설계자"
+        file: ".claude/agents/backend/db-engineer.md"
+        model: sonnet
+        role: "DB 전문가"
+        reports_to: "백엔드팀장"
+        skills: [데이터모델링, 스키마설계, 인덱스최적화, 마이그레이션]
+
+    meeting_flow:
+      round1_design:
+        parallel: true
+        agents: ["API설계자", "DB설계자"]
+        description: "API 엔드포인트 설계 + DB 스키마 설계"
+      round2_review:
+        agents: ["백엔드팀장"]
+        description: "아키텍처 종합 + 보안 체크 + 최종 확정"
+
+    mcps:
+      - figma
+    outputs:
+      - API서버
+      - DB스키마
+      - API문서
+      - Docker설정
+
+# 팀 간 워크플로우 의존성
+workflows:
+  default_pipeline:
+    name: "기본 개발 파이프라인"
+    steps:
+      - team: planning
+        action: "요구사항 분석 & 기획"
+        next: design
+      - team: design
+        action: "UI/UX 설계"
+        next: [frontend, backend]
+      - team: frontend
+        action: "클라이언트 구현"
+        parallel_with: backend
+      - team: backend
+        action: "서버 구현"
+        parallel_with: frontend
+
+# deskRPG 연동 설정
+deskrpg:
+  enabled: true
+  office_layout: "standard_4team"
+  npc_mapping:
+    기획팀장: { zone: "planning_room", sprite: "manager" }
+    창의기획자: { zone: "planning_room", sprite: "creative" }
+    창의팀원: { zone: "planning_room", sprite: "junior_creative" }
+    비평기획자: { zone: "planning_room", sprite: "analyst" }
+    비평팀원: { zone: "planning_room", sprite: "junior_analyst" }
+    디자인팀장: { zone: "design_studio", sprite: "design_lead" }
+    UX디자이너: { zone: "design_studio", sprite: "ux_designer" }
+    UI디자이너: { zone: "design_studio", sprite: "ui_designer" }
+    프론트팀장: { zone: "dev_room_front", sprite: "frontend_lead" }
+    컴포넌트개발자: { zone: "dev_room_front", sprite: "component_dev" }
+    페이지개발자: { zone: "dev_room_front", sprite: "page_dev" }
+    백엔드팀장: { zone: "dev_room_back", sprite: "backend_lead" }
+    API설계자: { zone: "dev_room_back", sprite: "api_engineer" }
+    DB설계자: { zone: "dev_room_back", sprite: "db_engineer" }
