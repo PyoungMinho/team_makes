@@ -189,13 +189,45 @@ teams:
         agents: ["백엔드팀장"]
         description: "아키텍처 종합 + 보안 체크 + 최종 확정"
 
-    mcps:
-      - figma
+    mcps: []
     outputs:
       - API서버
       - DB스키마
       - API문서
       - Docker설정
+
+  qa:
+    name: "QA팀"
+    description: "2인 구성 — 설계자(전략/케이스) → 실행자(구현/실행/검증)"
+    color: "#F39C12"
+    structure: "lead_review"
+    members:
+      - agent: "QA설계자"
+        file: ".claude/agents/qa/qa-architect.md"
+        model: opus
+        role: "테스트 아키텍트"
+        skills: [테스트전략, 케이스설계, 품질기준, 코드리뷰]
+
+      - agent: "QA실행자"
+        file: ".claude/agents/qa/qa-executor.md"
+        model: opus
+        role: "테스트 실행자"
+        reports_to: "QA설계자"
+        skills: [테스트구현, 테스트실행, 버그헌팅, 수정검증]
+
+    meeting_flow:
+      round1_design:
+        agents: ["QA설계자"]
+        description: "기획서+코드 분석 → 테스트 전략 + 케이스 설계"
+      round2_execute:
+        agents: ["QA실행자"]
+        description: "QA설계자의 케이스를 받아 테스트 작성/실행 + 버그 리포트"
+
+    mcps: []
+    outputs:
+      - 테스트설계서
+      - 테스트코드
+      - 버그리포트
 
 # 팀 간 워크플로우 의존성
 workflows:
@@ -214,23 +246,6 @@ workflows:
       - team: backend
         action: "서버 구현"
         parallel_with: frontend
-
-# deskRPG 연동 설정
-deskrpg:
-  enabled: true
-  office_layout: "standard_4team"
-  npc_mapping:
-    기획팀장: { zone: "planning_room", sprite: "manager" }
-    창의기획자: { zone: "planning_room", sprite: "creative" }
-    창의팀원: { zone: "planning_room", sprite: "junior_creative" }
-    비평기획자: { zone: "planning_room", sprite: "analyst" }
-    비평팀원: { zone: "planning_room", sprite: "junior_analyst" }
-    디자인팀장: { zone: "design_studio", sprite: "design_lead" }
-    UX디자이너: { zone: "design_studio", sprite: "ux_designer" }
-    UI디자이너: { zone: "design_studio", sprite: "ui_designer" }
-    프론트팀장: { zone: "dev_room_front", sprite: "frontend_lead" }
-    컴포넌트개발자: { zone: "dev_room_front", sprite: "component_dev" }
-    페이지개발자: { zone: "dev_room_front", sprite: "page_dev" }
-    백엔드팀장: { zone: "dev_room_back", sprite: "backend_lead" }
-    API설계자: { zone: "dev_room_back", sprite: "api_engineer" }
-    DB설계자: { zone: "dev_room_back", sprite: "db_engineer" }
+        next: qa
+      - team: qa
+        action: "테스트 설계 + 실행 + 버그 리포트"
